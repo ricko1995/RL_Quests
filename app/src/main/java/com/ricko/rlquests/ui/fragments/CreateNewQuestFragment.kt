@@ -16,7 +16,7 @@ import com.ricko.rlquests.db.Quest
 import com.ricko.rlquests.db.QuestType
 import com.ricko.rlquests.ui.MainActivity
 import com.ricko.rlquests.ui.viewmodels.CreateQuestViewModel
-import com.ricko.rlquests.util.CleanStrings
+import com.ricko.rlquests.util.DateConversion
 import com.ricko.rlquests.util.ClickHandler
 import kotlinx.android.synthetic.main.fragment_create_new_quest.*
 
@@ -70,7 +70,7 @@ class CreateNewQuestFragment : Fragment(R.layout.fragment_create_new_quest) {
             }
             viewModel.questTitle.value = it.title
             viewModel.questDescription.value = it.description
-            viewModel.createdDate.value = CleanStrings.getCleanCreatedDate(it)
+            viewModel.createdDate.value = DateConversion.getCleanCreatedDate(it)
             viewModel.isEditing.value = false
         }
 

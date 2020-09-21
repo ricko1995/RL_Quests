@@ -59,8 +59,6 @@ class QuestsFragment : Fragment(R.layout.fragment_quests), QuestsRecyclerAdapter
 
         fabAddQuest.setOnClickListener {
             findNavController().navigate(QuestsFragmentDirections.actionQuestsFragmentToCreateNewQuestFragment())
-//            val quest = listOfFakeQuests(System.currentTimeMillis())
-//            viewModel.insertQuest(quest)
         }
 
         slRefresh.setOnRefreshListener {
@@ -72,7 +70,7 @@ class QuestsFragment : Fragment(R.layout.fragment_quests), QuestsRecyclerAdapter
         }
     }
 
-    private fun insertNewOrUpdatedQuest(){
+    private fun insertNewOrUpdatedQuest() {
         args.quest?.let {
             viewModel.insertQuest(it)
         }
@@ -131,8 +129,8 @@ class QuestsFragment : Fragment(R.layout.fragment_quests), QuestsRecyclerAdapter
                 fabAddQuest.animate().scaleX(1f).scaleY(1f).duration = 150
                 requireActivity().invalidateOptionsMenu()
             }
-            R.id.menuAllCompletedQuests->{
-
+            R.id.menuAllCompletedQuests -> {
+                findNavController().navigate(QuestsFragmentDirections.actionQuestsFragmentToCompletedQuestsFragment())
             }
         }
         return super.onOptionsItemSelected(item)

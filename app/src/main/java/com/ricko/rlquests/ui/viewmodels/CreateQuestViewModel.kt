@@ -4,7 +4,6 @@ import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.ricko.rlquests.R
 
 class CreateQuestViewModel : ViewModel(), Observable {
 

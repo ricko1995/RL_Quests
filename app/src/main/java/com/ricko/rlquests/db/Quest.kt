@@ -15,7 +15,7 @@ data class Quest(
     var description: String = "",
     var isCompleted: Boolean = false,
     val creationDate: Long = 0L,
-    var completionDate: String? = null,
+    var completionDate: Long? = null,
     var questType: QuestType,
     @PrimaryKey(autoGenerate = false)
     var id: String = UUID.randomUUID().toString()

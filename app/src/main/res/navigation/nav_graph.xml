@@ -18,6 +18,9 @@
             app:argType="com.ricko.rlquests.db.Quest"
             app:nullable="true"
             android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_questsFragment_to_completedQuestsFragment"
+            app:destination="@id/completedQuestsFragment" />
     </fragment>
     <fragment
         android:id="@+id/createNewQuestFragment"
@@ -34,5 +37,14 @@
             app:argType="com.ricko.rlquests.db.Quest"
             app:nullable="true"
             android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/completedQuestsFragment"
+        android:name="com.ricko.rlquests.ui.fragments.CompletedQuestsFragment"
+        android:label="fragment_completed_quests"
+        tools:layout="@layout/fragment_completed_quests" >
+        <action
+            android:id="@+id/action_completedQuestsFragment_to_questsFragment"
+            app:destination="@id/questsFragment" />
     </fragment>
 </navigation>
