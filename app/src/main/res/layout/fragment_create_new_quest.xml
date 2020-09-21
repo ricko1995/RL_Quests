@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.fragments.CreateNewQuestFragment">
+
+    <data>
+
+        <variable
+            name="handler"
+            type="com.ricko.rlquests.util.ClickHandler" />
+
+        <variable
+            name="createQuestViewModel"
+            type="com.ricko.rlquests.ui.viewmodels.CreateQuestViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:onClick="@{(v)->handler.hideKeyboard(v)}"
+        android:padding="16dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextAppearance.MaterialComponents.Overline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{createQuestViewModel.createdDate}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="CreatedOn" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:checked="@={createQuestViewModel.isEditing()}"
+            android:text="Edit:"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:useMaterialThemeColors="true" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSave"
+            android:layout_width="200dp"
+            android:layout_height="75dp"
+            android:text="Save"
+            android:textSize="24sp"
+            app:cornerRadius="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/btnSave"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/btnDaily"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@={createQuestViewModel.isDailyRadioChecked()}"
+                android:enabled="@{createQuestViewModel.isEditing()}"
+                android:text="Daily"
+                android:textSize="12sp"
+                app:icon="@drawable/error_selector" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/btnWeekly"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@={createQuestViewModel.isWeeklyRadioChecked()}"
+                android:enabled="@{createQuestViewModel.isEditing()}"
+                android:text="Weekly"
+                android:textSize="12sp"
+                app:icon="@drawable/today_selector" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/btnMonthly"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@={createQuestViewModel.isMonthlyRadioChecked()}"
+                android:enabled="@{createQuestViewModel.isEditing()}"
+                android:text="Monthly"
+                android:textSize="12sp"
+                app:icon="@drawable/calendar_selector" />
+
+        </RadioGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            app:counterMaxLength="24"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="1dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="@{createQuestViewModel.isEditing()}"
+                android:hint="Quest title*"
+                android:text="@={createQuestViewModel.questTitle}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/radioGroupContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:enabled="@{createQuestViewModel.isEditing()}"
+                android:gravity="top"
+                android:hint="Quest description*"
+                android:text="@={createQuestViewModel.questDescription}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menuDaily"
+        android:title=""
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menuWeekly"
+        android:title=""
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menuMonthly"
+        android:title=""
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menuAllCompletedQuests"
+        android:title="All completed quests"
+        app:showAsAction="never" />
+</menu>
