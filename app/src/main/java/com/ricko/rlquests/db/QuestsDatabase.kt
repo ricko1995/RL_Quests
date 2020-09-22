@@ -9,6 +9,6 @@ import androidx.room.TypeConverters
     version = 7
 )
 @TypeConverters(Converters::class)
-abstract class QuestsDatabase: RoomDatabase() {
+abstract class QuestsDatabase : RoomDatabase() {
     abstract fun getQuestDao(): QuestDao
 }

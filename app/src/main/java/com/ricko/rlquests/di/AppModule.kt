@@ -25,7 +25,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideQuestDao(db: QuestsDatabase): QuestDao{
+    fun provideQuestDao(db: QuestsDatabase): QuestDao {
         return db.getQuestDao()
     }
 

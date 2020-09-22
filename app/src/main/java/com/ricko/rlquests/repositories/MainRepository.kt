@@ -33,4 +33,13 @@ class MainRepository @Inject constructor(private val questDao: QuestDao) {
     fun getNotCompletedWeeklyQuests() = questDao.getNotCompletedWeeklyQuests()
 
     fun getNotCompletedMonthlyQuests() = questDao.getNotCompletedMonthlyQuests()
+
+    fun getCompletedDailyQuestsBetweenDates(firstDate: Long, lastDate: Long) =
+        questDao.getCompletedDailyQuestsBetweenDates(firstDate, lastDate)
+
+    fun getCompletedWeeklyQuestsBetweenDates(firstDate: Long, lastDate: Long) =
+        questDao.getCompletedWeeklyQuestsBetweenDates(firstDate, lastDate)
+
+    fun getCompletedMonthlyQuestsBetweenDates(firstDate: Long, lastDate: Long) =
+        questDao.getCompletedMonthlyQuestsBetweenDates(firstDate, lastDate)
 }

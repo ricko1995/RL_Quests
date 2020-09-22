@@ -18,9 +18,10 @@ import com.ricko.rlquests.ui.MainActivity
 import com.ricko.rlquests.ui.viewmodels.CreateQuestViewModel
 import com.ricko.rlquests.util.DateConversion
 import com.ricko.rlquests.util.ClickHandler
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_create_new_quest.*
 
-
+@AndroidEntryPoint
 class CreateNewQuestFragment : Fragment(R.layout.fragment_create_new_quest) {
 
     private val args by navArgs<CreateNewQuestFragmentArgs>()
@@ -28,7 +29,7 @@ class CreateNewQuestFragment : Fragment(R.layout.fragment_create_new_quest) {
     private val viewModel: CreateQuestViewModel by viewModels()
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             android.R.id.home -> findNavController().navigate(CreateNewQuestFragmentDirections.actionCreateNewQuestFragmentToQuestsFragment())
         }
         return super.onOptionsItemSelected(item)
@@ -37,9 +38,9 @@ class CreateNewQuestFragment : Fragment(R.layout.fragment_create_new_quest) {
 
     override fun onResume() {
         super.onResume()
-        if (activity is MainActivity) {
-            (activity as MainActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
+        val mainActivity = activity as MainActivity
+        mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        mainActivity.supportActionBar?.title = if (args.quest != null) "Edit Quest" else "Create New Quest"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

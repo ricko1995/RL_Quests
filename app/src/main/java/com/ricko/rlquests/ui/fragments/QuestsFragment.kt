@@ -5,8 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -20,7 +18,6 @@ import com.ricko.rlquests.R
 import com.ricko.rlquests.adapters.QuestsRecyclerAdapter
 import com.ricko.rlquests.db.Quest
 import com.ricko.rlquests.db.QuestType
-import com.ricko.rlquests.other.TestQuests.listOfFakeQuests
 import com.ricko.rlquests.ui.MainActivity
 import com.ricko.rlquests.ui.viewmodels.QuestsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,9 +32,7 @@ class QuestsFragment : Fragment(R.layout.fragment_quests), QuestsRecyclerAdapter
 
     override fun onResume() {
         super.onResume()
-        if (activity is MainActivity) {
-            (activity as MainActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        }
+        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,14 +55,6 @@ class QuestsFragment : Fragment(R.layout.fragment_quests), QuestsRecyclerAdapter
         fabAddQuest.setOnClickListener {
             findNavController().navigate(QuestsFragmentDirections.actionQuestsFragmentToCreateNewQuestFragment())
         }
-
-        slRefresh.setOnRefreshListener {
-            viewModel.quest.value?.let {
-                questsRecyclerAdapter.submitQuestList(it).also {
-                    slRefresh.isRefreshing = false
-                }
-            }
-        }
     }
 
     private fun insertNewOrUpdatedQuest() {
@@ -77,7 +64,7 @@ class QuestsFragment : Fragment(R.layout.fragment_quests), QuestsRecyclerAdapter
     }
 
     private fun registerObservers() {
-        viewModel.quest.observe(viewLifecycleOwner) {
+        viewModel.quests.observe(viewLifecycleOwner) {
             questsRecyclerAdapter.submitQuestList(it)
         }
     }
@@ -92,18 +79,22 @@ class QuestsFragment : Fragment(R.layout.fragment_quests), QuestsRecyclerAdapter
         val dailyMenuItem = menu.findItem(R.id.menuDaily)
         val weeklyMenuItem = menu.findItem(R.id.menuWeekly)
         val monthlyMenuItem = menu.findItem(R.id.menuMonthly)
+        val mainActivity = activity as MainActivity
         when (viewModel.questType) {
             QuestType.DAILY -> {
+                mainActivity.supportActionBar?.title = "Daily Quests"
                 dailyMenuItem.setIcon(R.drawable.ic_error_filled)
                 weeklyMenuItem.setIcon(R.drawable.ic_today_outline)
                 monthlyMenuItem.setIcon(R.drawable.ic_calendar_outline)
             }
             QuestType.WEEKLY -> {
+                mainActivity.supportActionBar?.title = "Weekly Quests"
                 dailyMenuItem.setIcon(R.drawable.ic_error_outline)
                 weeklyMenuItem.setIcon(R.drawable.ic_today_filled)
                 monthlyMenuItem.setIcon(R.drawable.ic_calendar_outline)
             }
             QuestType.MONTHLY -> {
+                mainActivity.supportActionBar?.title = "Monthly Quests"
                 dailyMenuItem.setIcon(R.drawable.ic_error_outline)
                 weeklyMenuItem.setIcon(R.drawable.ic_today_outline)
                 monthlyMenuItem.setIcon(R.drawable.ic_calendar_filled)
@@ -115,17 +106,17 @@ class QuestsFragment : Fragment(R.layout.fragment_quests), QuestsRecyclerAdapter
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menuDaily -> {
-                viewModel.sortRuns(QuestType.DAILY)
+                viewModel.setQuestType(QuestType.DAILY)
                 fabAddQuest.animate().scaleX(1f).scaleY(1f).duration = 150
                 requireActivity().invalidateOptionsMenu()
             }
             R.id.menuWeekly -> {
-                viewModel.sortRuns(QuestType.WEEKLY)
+                viewModel.setQuestType(QuestType.WEEKLY)
                 fabAddQuest.animate().scaleX(1f).scaleY(1f).duration = 150
                 requireActivity().invalidateOptionsMenu()
             }
             R.id.menuMonthly -> {
-                viewModel.sortRuns(QuestType.MONTHLY)
+                viewModel.setQuestType(QuestType.MONTHLY)
                 fabAddQuest.animate().scaleX(1f).scaleY(1f).duration = 150
                 requireActivity().invalidateOptionsMenu()
             }
@@ -140,18 +131,18 @@ class QuestsFragment : Fragment(R.layout.fragment_quests), QuestsRecyclerAdapter
         adapter = questsRecyclerAdapter
         layoutManager = LinearLayoutManager(activity)
         ItemTouchHelper(itemTouchHelper).attachToRecyclerView(this)
-        var syncBool = false
+        var isAnimating = false
         setOnScrollChangeListener { _, _, _, _, direction ->
-            if (syncBool) return@setOnScrollChangeListener
-            syncBool = true
+            if (isAnimating) return@setOnScrollChangeListener
+            isAnimating = true
             when {
                 direction > 0 -> fabAddQuest.animate().scaleX(1f).scaleY(1f).withEndAction {
-                    syncBool = false
+                    isAnimating = false
                 }.duration = 150
                 direction < 0 -> fabAddQuest.animate().scaleX(0f).scaleY(0f).withEndAction {
-                    syncBool = false
+                    isAnimating = false
                 }.duration = 150
-                else -> syncBool = false
+                else -> isAnimating = false
             }
         }
     }
@@ -182,6 +173,7 @@ class QuestsFragment : Fragment(R.layout.fragment_quests), QuestsRecyclerAdapter
                 }
                 RIGHT -> {
                     quest.isCompleted = true
+                    quest.completionDate = System.currentTimeMillis()
                     quest.setIcon()
                     viewModel.insertQuest(quest)
                     viewHolder.itemView.animate().apply {

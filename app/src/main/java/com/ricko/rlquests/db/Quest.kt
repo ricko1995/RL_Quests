@@ -19,11 +19,11 @@ data class Quest(
     var questType: QuestType,
     @PrimaryKey(autoGenerate = false)
     var id: String = UUID.randomUUID().toString()
-) : Parcelable{
+) : Parcelable {
 
     @IgnoredOnParcel
     var questIcon = if (isCompleted) R.drawable.ic_check_circle_animated else R.drawable.ic_clock
-    fun setIcon(){
+    fun setIcon() {
         questIcon = if (isCompleted) R.drawable.ic_check_circle_animated else R.drawable.ic_clock
     }
 }

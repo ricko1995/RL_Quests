@@ -1,6 +1,7 @@
 package com.ricko.rlquests.util
 
 import android.annotation.SuppressLint
+import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.ricko.rlquests.db.Quest
 import java.text.SimpleDateFormat
 import java.util.*
@@ -63,7 +64,7 @@ object DateConversion {
     }
 
     @SuppressLint("SimpleDateFormat")
-    fun getMonth(quest: Quest):Int{
+    fun getMonth(quest: Quest): Int {
         quest.completionDate?.let {
             val date = Date(it)
             val sdfDay = SimpleDateFormat("dd")
@@ -73,7 +74,7 @@ object DateConversion {
             val day = sdfDay.format(date)
             val month = sdfMonth.format(date)
             val year = sdfYear.format(date)
-            val calendar = Calendar.getInstance().also {calendar->
+            val calendar = Calendar.getInstance().also { calendar ->
                 calendar.firstDayOfWeek = Calendar.MONDAY
                 calendar.set(year.toInt(), month.toInt(), day.toInt())
             }
@@ -82,5 +83,90 @@ object DateConversion {
 
         }
         return -1
+    }
+
+    fun getMonthDays(calendarDay: CalendarDay): List<CalendarDay> {
+        val currentMonth = calendarDay.month
+        val currentYear = calendarDay.year
+        val lastDayOfCurrentMonth = when (currentMonth) {
+            4, 6, 9, 11 -> 30
+            2 -> if (currentYear % 4 == 0) 29 else 28
+            else -> 31
+        }
+        val listOfDays = mutableListOf<CalendarDay>()
+        for (i in 1..lastDayOfCurrentMonth) {
+            listOfDays.add(CalendarDay.from(currentYear, currentMonth, i))
+        }
+        return listOfDays
+    }
+
+    fun getWeekDays(calendarDay: CalendarDay): List<CalendarDay> {
+        val currentDay = calendarDay.day
+        val currentMonth = calendarDay.month
+        val currentYear = calendarDay.year
+        val currentDayOfWeek = Calendar.getInstance().apply {
+            firstDayOfWeek = Calendar.MONDAY
+            set(currentYear, currentMonth - 1, currentDay)
+        }.get(Calendar.DAY_OF_WEEK)
+
+        val monday = currentDay - if (currentDayOfWeek == 1) currentDayOfWeek + 5 else currentDayOfWeek - 2
+
+        val previousMonth = if (currentMonth == 1) 12 else currentMonth - 1
+        val nextMonth = if (currentMonth == 12) 1 else currentMonth + 1
+
+        val lastDayOfCurrentMonth = when (currentMonth) {
+            4, 6, 9, 11 -> 30
+            2 -> if (currentYear % 4 == 0) 29 else 28
+            else -> 31
+        }
+        var lastDayOfPreviousMonth = when (previousMonth) {
+            4, 6, 9, 11 -> 30
+            2 -> if (currentYear % 4 == 0) 29 else 28
+            else -> 31
+        }
+        var nextMonthDay = 1
+
+        val listOfDays = mutableListOf<CalendarDay>()
+        for (i in monday..monday + 6) {
+            if (i in 1..lastDayOfCurrentMonth) {
+                listOfDays.add(CalendarDay.from(currentYear, currentMonth, i))
+            }
+            if (i > lastDayOfCurrentMonth) {
+                val year = if (currentMonth == 12) currentYear + 1 else currentYear
+                listOfDays.add(CalendarDay.from(year, nextMonth, nextMonthDay))
+                nextMonthDay++
+            }
+            if (i < 1) {
+                val year = if (currentMonth == 1) currentYear - 1 else currentYear
+                listOfDays.add(CalendarDay.from(year, previousMonth, lastDayOfPreviousMonth))
+                lastDayOfPreviousMonth--
+            }
+        }
+
+        return listOfDays
+    }
+
+    fun getMillisFromListOfDates(listOfDates: List<CalendarDay>): Pair<Long, Long> {
+        val firstDate = Calendar.getInstance().apply {
+            set(listOfDates.first().year, listOfDates.first().month - 1, listOfDates.first().day, 12, 0, 0)
+        }.timeInMillis
+
+        val lastDate = Calendar.getInstance().apply {
+            set(listOfDates.last().year, listOfDates.last().month - 1, listOfDates.last().day, 12, 0, 0)
+        }.timeInMillis
+
+        return Pair(firstDate, lastDate)
+    }
+
+    fun getOneDayMillis(calendarDay: CalendarDay): Pair<Long, Long> {
+        val startOfDay = Calendar.getInstance().apply {
+            set(calendarDay.year, calendarDay.month - 1, calendarDay.day, 0, 0, 1)
+        }.timeInMillis
+
+        val endOfDay = Calendar.getInstance().apply {
+            set(calendarDay.year, calendarDay.month - 1, calendarDay.day, 23, 59, 59)
+        }.timeInMillis
+
+        return Pair(startOfDay, endOfDay)
     }
 }

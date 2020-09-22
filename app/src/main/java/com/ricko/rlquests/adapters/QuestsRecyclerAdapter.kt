@@ -13,7 +13,8 @@ import com.ricko.rlquests.db.Quest
 import com.ricko.rlquests.util.DateConversion
 import kotlinx.android.synthetic.main.quest_item.view.*
 
-class QuestsRecyclerAdapter(private val questItemListener: OnQuestItemLongClickListener) : RecyclerView.Adapter<QuestsRecyclerAdapter.QuestViewHolder>() {
+class QuestsRecyclerAdapter(private val questItemListener: OnQuestItemLongClickListener? = null) :
+    RecyclerView.Adapter<QuestsRecyclerAdapter.QuestViewHolder>() {
 
     private val diffCallback = object : DiffUtil.ItemCallback<Quest>() {
         override fun areItemsTheSame(oldItem: Quest, newItem: Quest): Boolean {
@@ -47,7 +48,7 @@ class QuestsRecyclerAdapter(private val questItemListener: OnQuestItemLongClickL
                     HapticFeedbackConstants.VIRTUAL_KEY,
                     HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 )
-                questItemListener.questItemLongClick(currentItem)
+                questItemListener?.questItemLongClick(currentItem)
                 return@setOnLongClickListener true
             }
         }

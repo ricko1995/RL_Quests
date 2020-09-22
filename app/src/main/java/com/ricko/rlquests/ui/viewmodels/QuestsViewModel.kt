@@ -9,38 +9,37 @@ import kotlinx.coroutines.launch
 
 class QuestsViewModel @ViewModelInject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
-    val quest: MediatorLiveData<List<Quest>> = MediatorLiveData()
+    val quests: MediatorLiveData<List<Quest>> = MediatorLiveData()
     private val dailyQuests = mainRepository.getAllDailyQuests()
     private val weeklyQuests = mainRepository.getAllWeeklyQuests()
     private val monthlyQuests = mainRepository.getAllMonthlyQuests()
-//    val completedQuests = mainRepository.getCompletedQuests()
-//    val notCompletedQuests = mainRepository.getNotCompletedQuests()
+
     var questType = QuestType.DAILY
 
     init {
-        quest.addSource(dailyQuests) { result ->
+        quests.addSource(dailyQuests) { result ->
             if (questType == QuestType.DAILY) {
-                result?.let { quest.value = it }
+                result?.let { quests.value = it }
             }
         }
 
-        quest.addSource(weeklyQuests) { result ->
+        quests.addSource(weeklyQuests) { result ->
             if (questType == QuestType.WEEKLY) {
-                result?.let { quest.value = it }
+                result?.let { quests.value = it }
             }
         }
 
-        quest.addSource(monthlyQuests) { result ->
+        quests.addSource(monthlyQuests) { result ->
             if (questType == QuestType.MONTHLY) {
-                result?.let { quest.value = it }
+                result?.let { quests.value = it }
             }
         }
     }
 
-    fun sortRuns(questType: QuestType) = when (questType) {
-        QuestType.DAILY -> dailyQuests.value?.let { quest.value = it }
-        QuestType.WEEKLY -> weeklyQuests.value?.let { quest.value = it }
-        QuestType.MONTHLY -> monthlyQuests.value?.let { quest.value = it }
+    fun setQuestType(questType: QuestType) = when (questType) {
+        QuestType.DAILY -> dailyQuests.value?.let { quests.value = it }
+        QuestType.WEEKLY -> weeklyQuests.value?.let { quests.value = it }
+        QuestType.MONTHLY -> monthlyQuests.value?.let { quests.value = it }
     }.also {
         this.questType = questType
     }

@@ -6,17 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.QuestsFragment">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/slRefresh">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvQuests"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/quest_item" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.core.widget.NestedScrollView>
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
